@@ -19,7 +19,7 @@ router.post("/user/signup", async (req, res) => {
 
       if (!user) {
          // Checking all fields are provided
-         if (req.fields.email && req.fields.password) {
+         if (req.fields.username && req.fields.email && req.fields.password) {
             // Password encryption
             const salt = uid2(64);
             const hash = SHA256(req.fields.password + salt).toString(encBase64);
@@ -28,6 +28,7 @@ router.post("/user/signup", async (req, res) => {
             // User creation
             const newUser = new User({
                email: req.fields.email,
+               username: req.fields.username,
                salt: salt,
                hash: hash,
                token: token,
@@ -56,7 +57,7 @@ router.post("/user/signup", async (req, res) => {
    }
 });
 
-// Route POST : LOG IN
+// ROUTE POST : LOG IN
 router.post("/user/login", async (req, res) => {
    try {
       // Find the user with email
@@ -87,5 +88,17 @@ router.post("/user/login", async (req, res) => {
       res.status(400).json({ error: error.message });
    }
 });
+
+// ROUTE GET : USER LIST
+router.get("/user/:userId", async (req, res) => {
+   try {
+      const userToFind = await User.findById(req.params.userId);
+      console.log(userToFind);
+      res.status(200).json(userToFind);
+   } catch (error) {
+      res.status(400).json({ error: error.message });
+   }
+});
+
 // Export routes
 module.exports = router;

@@ -8,6 +8,7 @@ const User = mongoose.model("User", {
       required: true,
       type: String,
    },
+   username: String,
    fav_characters: Array,
    fav_comics: Array,
    token: String,
