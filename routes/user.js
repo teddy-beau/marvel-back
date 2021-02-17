@@ -7,6 +7,9 @@ const SHA256 = require("crypto-js/sha256");
 const encBase64 = require("crypto-js/enc-base64");
 const uid2 = require("uid2");
 
+// MIDDLEWARE IMPORT
+const isAuthenticated = require("../middleware/isAuthenticated");
+
 // MODELS IMPORT
 const User = require("../models/User");
 
@@ -90,7 +93,7 @@ router.post("/user/login", async (req, res) => {
 });
 
 // ROUTE GET : USER LIST
-router.get("/user/:userId", async (req, res) => {
+router.get("/user/:userId", isAuthenticated, async (req, res) => {
    try {
       const userToFind = await User.findById(req.params.userId);
       console.log(userToFind);
