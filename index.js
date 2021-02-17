@@ -23,6 +23,9 @@ app.use(comicsRoutes);
 const charactersRoutes = require("./routes/characters");
 app.use(charactersRoutes);
 
+const userRoutes = require("./routes/user");
+app.use(userRoutes);
+
 // WRONG ROUTES
 app.all("*", (req, res) => {
    res.status(404).json({ error: "Page not found" });

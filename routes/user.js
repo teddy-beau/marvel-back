@@ -15,7 +15,7 @@ router.post("/user/signup", async (req, res) => {
    try {
       // Checking user existence
       const user = await User.findOne({ email: req.fields.email });
-      // console.log(user);
+      console.log(user);
 
       if (!user) {
          // Checking all fields are provided
@@ -24,9 +24,9 @@ router.post("/user/signup", async (req, res) => {
             const salt = uid2(64);
             const hash = SHA256(req.fields.password + salt).toString(encBase64);
             const token = uid2(64);
-            // console.log(salt);
-            // console.log(hash);
-            // console.log("token", token);
+            console.log(salt);
+            console.log(hash);
+            console.log("token", token);
 
             // User creation
             const newUser = new User({
