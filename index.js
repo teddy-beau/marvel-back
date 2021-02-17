@@ -29,7 +29,6 @@ app.all("*", (req, res) => {
 });
 
 // SERVER
-// process.env.PORT ||
-app.listen(3100, () => {
+app.listen(process.env.PORT || 3100, () => {
    console.log("Server started");
 });
