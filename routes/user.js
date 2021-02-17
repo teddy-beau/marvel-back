@@ -43,6 +43,7 @@ router.post("/user/signup", async (req, res) => {
             res.status(201).json({
                _id: newUser._id,
                email: newUser.email,
+               username: newUser.username,
                token: newUser.token,
             });
          } else {
@@ -76,6 +77,7 @@ router.post("/user/login", async (req, res) => {
             res.status(200).json({
                _id: user._id,
                token: user.token,
+               username: user.username,
             });
          } else {
             res.status(400).json({

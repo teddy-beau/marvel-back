@@ -3,7 +3,7 @@ const express = require("express");
 const axios = require("axios");
 const router = express.Router();
 
-// ROUTE: SEARCH ALL COMICS
+// ROUTE: SEARCH ALL CHARACTERS
 router.get("/characters", async (req, res) => {
    try {
       let limit = 100;
