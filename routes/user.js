@@ -24,9 +24,6 @@ router.post("/user/signup", async (req, res) => {
             const salt = uid2(64);
             const hash = SHA256(req.fields.password + salt).toString(encBase64);
             const token = uid2(64);
-            console.log(salt);
-            console.log(hash);
-            console.log("token", token);
 
             // User creation
             const newUser = new User({
@@ -37,7 +34,7 @@ router.post("/user/signup", async (req, res) => {
             });
 
             await newUser.save();
-            console.log("New user created", newUser);
+            console.log(`New user created: ${newUser.email}`);
 
             res.status(201).json({
                _id: newUser._id,
@@ -71,6 +68,7 @@ router.post("/user/login", async (req, res) => {
          );
          // Compare new hash with the one in the DB
          if (newHash === user.hash) {
+            console.log(`User logged in: ${user.email}`);
             res.status(200).json({
                _id: user._id,
                token: user.token,
