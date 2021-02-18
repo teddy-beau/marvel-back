@@ -18,7 +18,8 @@ router.get("/comics", async (req, res) => {
 
       let title = "";
       if (req.query.title) {
-         title = new RegExp(req.query.title, "i");
+         // name = new RegExp(req.query.title, "i"); // Not accepted by API
+         title = req.query.title;
       }
 
       const response = await axios.get(
