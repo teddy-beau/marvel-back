@@ -18,7 +18,8 @@ router.get("/characters", async (req, res) => {
 
       let name = "";
       if (req.query.name) {
-         name = new RegExp(req.query.name, "i");
+         // name = new RegExp(req.query.name, "i"); // Not accepted by API
+         name = req.query.name;
       }
 
       const response = await axios.get(
