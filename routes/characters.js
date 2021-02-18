@@ -26,13 +26,12 @@ router.get("/characters", async (req, res) => {
       );
       // Cleaning the API call results by removing charcaters without picture
       for (let i = 0; i < response.data.results.length; i++) {
-         if (response.data.results[i].thumbnail) {
-            if (
-               response.data.results[i].thumbnail.path ===
+         if (
+            !response.data.results[i].thumbnail ||
+            response.data.results[i].thumbnail.path ===
                "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available"
-            ) {
-               response.data.results.splice(i, 1);
-            }
+         ) {
+            response.data.results.splice(i, 1);
          }
       }
       res.status(200).json(response.data);
