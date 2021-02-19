@@ -48,31 +48,28 @@ router.get("/characters", async (req, res) => {
 });
 
 // ADD CHARACTER TO LIST
-router.post(
-   "/characters/save",
-   // isAuthenticated,
-   async (req, res) => {
-      try {
-         // Make sure both infos are available
-         console.log("id", req.fields.userId);
-         console.log("char", req.fields.character);
-         if (req.fields.character && req.fields.userId) {
-            // Find user
-            const user = await User.findById(req.fields.userId);
-            // Add body to user list:
-            user.fav_characters.push({ character: req.fields.character });
-            await user.save();
-            console.log(user);
-         } else {
-            res.status(400).json({
-               message: "Missing information.",
-            });
-         }
-      } catch (error) {
-         console.log(error);
+router.post("/characters/save", isAuthenticated, async (req, res) => {
+   try {
+      // Make sure both infos are available
+      console.log("id fields", req.fields.userId);
+      console.log("id body", req.body.userId);
+      console.log("char", req.fields.character);
+      if (req.fields.character && req.fields.userId) {
+         // Find user
+         const user = await User.findById(req.fields.userId);
+         // Add body to user list:
+         user.fav_characters.push({ character: req.fields.character });
+         await user.save();
+         console.log(user);
+      } else {
+         res.status(400).json({
+            message: "Missing information.",
+         });
       }
+   } catch (error) {
+      console.log(error);
    }
-);
+});
 
 // REMOVE CHARACTER FROM LIST
 // router.post("/characters/unsave", isAuthenticated, async (req, res) => {
