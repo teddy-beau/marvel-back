@@ -57,7 +57,7 @@ router.post("/characters/save", isAuthenticated, async (req, res) => {
          // Find user
          const user = await User.findById(req.fields.userId);
          // Add body to user list:
-         user.fav_characters.push({ character: req.fields.character });
+         user.fav_characters.push(req.fields.character);
          await user.save();
          console.log(user);
       } else {
