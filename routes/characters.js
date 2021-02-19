@@ -75,29 +75,27 @@ router.post(
 );
 
 // REMOVE CHARACTER FROM LIST
-router.post("/characters/unsave", isAuthenticated, async (req, res) => {
-   try {
-      // Make sure both infos are available
-      if (req.query.character && req.query.userId) {
-         // Find user
-         const user = await User.findById(req.query.userId);
-         // Get object keys
-         // for each keys > key.charID
-         // if key.charID match body.charID > remove match (splice)
+// router.post("/characters/unsave", isAuthenticated, async (req, res) => {
+//    try {
+//       // Make sure both infos are available
+//       if (req.query.character && req.query.userId) {
+//          // Find user
+//          const user = await User.findById(req.query.userId);
+//          // Get object keys
+//          // for each keys > key.charID
+//          // if key.charID match body.charID > remove match (splice)
 
-         // Add to user list:
-         user.fav_characters.push({ character: req.query.character });
-         await user.save();
-         console.log(user);
-      } else {
-         res.status(400).json({
-            message: "Missing information.",
-         });
-      }
-   } catch (error) {
-      console.log(error);
-   }
-});
+//          await user.save();
+//          console.log(user);
+//       } else {
+//          res.status(400).json({
+//             message: "Missing information.",
+//          });
+//       }
+//    } catch (error) {
+//       console.log(error);
+//    }
+// });
 
 // ROUTE EXPORT
 module.exports = router;

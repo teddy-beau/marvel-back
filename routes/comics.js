@@ -54,29 +54,29 @@ router.get("/comics/:characterId", async (req, res) => {
 });
 
 // ADD COMIC TO LIST
-router.post("/comics/save", isAuthenticated, async (req, res) => {
-   try {
-      // Make sure both infos are available
-      if (req.query.comicId && req.query.userId) {
-         // Find user
-         const user = await User.findById(req.query.userId);
-         // Get comic info:
-         const response = await axios.get(
-            `https://lereacteur-marvel-api.herokuapp.com/comics/${req.query.comicId}?apiKey=${process.env.MARVEL_API_KEY}`
-         );
-         // Add to user list:
-         user.fav_comics.push(response.data);
-         await user.save();
-         console.log(user);
-      } else {
-         res.status(400).json({
-            message: "Missing information.",
-         });
-      }
-   } catch (error) {
-      console.log(error);
-   }
-});
+// router.post("/comics/save", isAuthenticated, async (req, res) => {
+//    try {
+//       // Make sure both infos are available
+//       if (req.query.comicId && req.query.userId) {
+//          // Find user
+//          const user = await User.findById(req.query.userId);
+//          // Get comic info:
+//          const response = await axios.get(
+//             `https://lereacteur-marvel-api.herokuapp.com/comics/${req.query.comicId}?apiKey=${process.env.MARVEL_API_KEY}`
+//          );
+//          // Add to user list:
+//          user.fav_comics.push(response.data);
+//          await user.save();
+//          console.log(user);
+//       } else {
+//          res.status(400).json({
+//             message: "Missing information.",
+//          });
+//       }
+//    } catch (error) {
+//       console.log(error);
+//    }
+// });
 
 // ROUTE EXPORT
 module.exports = router;
