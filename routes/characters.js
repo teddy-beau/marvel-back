@@ -3,6 +3,12 @@ const express = require("express");
 const axios = require("axios");
 const router = express.Router();
 
+// MIDDLEWARE IMPORT
+const isAuthenticated = require("../middleware/isAuthenticated");
+
+// MODEL IMPORT
+const User = require("../models/User");
+
 // ROUTE: SEARCH ALL CHARACTERS
 router.get("/characters", async (req, res) => {
    try {
@@ -36,6 +42,57 @@ router.get("/characters", async (req, res) => {
          }
       }
       res.status(200).json(response.data);
+   } catch (error) {
+      console.log(error);
+   }
+});
+
+// ADD CHARACTER TO LIST
+router.post("/comics/save", isAuthenticated, async (req, res) => {
+   try {
+      // Make sure both infos are available
+      if (req.query.character && req.query.userId) {
+         // Find user
+         const user = await User.findById(req.query.userId);
+         // // Get comic info:
+         // const response = await axios.get(
+         //    `https://lereacteur-marvel-api.herokuapp.com/characters/${req.query.comicId}?apiKey=${process.env.MARVEL_API_KEY}`
+         // );
+         // Get request data:
+
+         // Add to user list:
+         user.fav_characters.push({ character: req.query.character });
+         await user.save();
+         console.log(user);
+      } else {
+         res.status(400).json({
+            message: "Missing information.",
+         });
+      }
+   } catch (error) {
+      console.log(error);
+   }
+});
+
+// REMOVE CHARACTER FROM LIST
+router.post("/comics/unsave", isAuthenticated, async (req, res) => {
+   try {
+      // Make sure both infos are available
+      if (req.query.character && req.query.userId) {
+         // Find user
+         const user = await User.findById(req.query.userId);
+         // loop fav to find match
+         // remove match (splice)
+
+         // Add to user list:
+         user.fav_characters.push({ character: req.query.character });
+         await user.save();
+         console.log(user);
+      } else {
+         res.status(400).json({
+            message: "Missing information.",
+         });
+      }
    } catch (error) {
       console.log(error);
    }
