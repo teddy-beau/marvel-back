@@ -51,16 +51,12 @@ router.get("/characters", async (req, res) => {
 router.post("/characters/save", isAuthenticated, async (req, res) => {
    try {
       // Make sure both infos are available
+      console.log(req.query.userId);
+      console.log(req.query.character);
       if (req.query.character && req.query.userId) {
          // Find user
          const user = await User.findById(req.query.userId);
-         // // Get comic info:
-         // const response = await axios.get(
-         //    `https://lereacteur-marvel-api.herokuapp.com/characters/${req.query.comicId}?apiKey=${process.env.MARVEL_API_KEY}`
-         // );
-         // Get request data:
-
-         // Add to user list:
+         // Add body to user list:
          user.fav_characters.push({ character: req.query.character });
          await user.save();
          console.log(user);
@@ -81,8 +77,9 @@ router.post("/characters/unsave", isAuthenticated, async (req, res) => {
       if (req.query.character && req.query.userId) {
          // Find user
          const user = await User.findById(req.query.userId);
-         // loop fav to find match
-         // remove match (splice)
+         // Get object keys
+         // for each keys > key.charID
+         // if key.charID match body.charID > remove match (splice)
 
          // Add to user list:
          user.fav_characters.push({ character: req.query.character });
