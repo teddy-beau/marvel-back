@@ -48,7 +48,7 @@ router.get("/characters", async (req, res) => {
 });
 
 // ADD CHARACTER TO LIST
-router.post("/comics/save", isAuthenticated, async (req, res) => {
+router.post("/characters/save", isAuthenticated, async (req, res) => {
    try {
       // Make sure both infos are available
       if (req.query.character && req.query.userId) {
@@ -75,7 +75,7 @@ router.post("/comics/save", isAuthenticated, async (req, res) => {
 });
 
 // REMOVE CHARACTER FROM LIST
-router.post("/comics/unsave", isAuthenticated, async (req, res) => {
+router.post("/characters/unsave", isAuthenticated, async (req, res) => {
    try {
       // Make sure both infos are available
       if (req.query.character && req.query.userId) {
