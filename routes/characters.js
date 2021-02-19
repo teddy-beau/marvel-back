@@ -51,8 +51,6 @@ router.get("/characters", async (req, res) => {
 router.post("/characters/save", isAuthenticated, async (req, res) => {
    try {
       // Make sure both infos are available
-      console.log("id fields", req.fields.userId);
-      console.log("char", req.fields.character);
       if (req.fields.character && req.fields.userId) {
          // Find user
          const user = await User.findById(req.fields.userId);
@@ -71,27 +69,36 @@ router.post("/characters/save", isAuthenticated, async (req, res) => {
 });
 
 // REMOVE CHARACTER FROM LIST
-// router.post("/characters/unsave", isAuthenticated, async (req, res) => {
-//    try {
-//       // Make sure both infos are available
-//       if (req.query.character && req.query.userId) {
-//          // Find user
-//          const user = await User.findById(req.query.userId);
-//          // Get object keys
-//          // for each keys > key.charID
-//          // if key.charID match body.charID > remove match (splice)
+router.post("/characters/unsave", isAuthenticated, async (req, res) => {
+   try {
+      // Make sure both infos are available
+      if (req.query.character && req.query.userId) {
+         // Find user
+         const user = await User.findById(req.query.userId);
+         // Get object keys
+         const keys = Object.keys(user.fav_characters);
+         console.log("keys", keys);
+         for (let i = 0; i < keys.length; i++) {
+            console.log("_id[I]", user.fav_characters[i]._id);
+            if (user.fav_characters[i]._id === req.fields.character._id) {
+               user.fav_characters.splice(i, 1);
+            }
+         }
+         console.log("user", user);
+         // for each keys > key.charID
+         // if key.charID match body.charID > remove match (splice)
 
-//          await user.save();
-//          console.log(user);
-//       } else {
-//          res.status(400).json({
-//             message: "Missing information.",
-//          });
-//       }
-//    } catch (error) {
-//       console.log(error);
-//    }
-// });
+         await user.save();
+         console.log(user);
+      } else {
+         res.status(400).json({
+            message: "Missing information.",
+         });
+      }
+   } catch (error) {
+      console.log(error);
+   }
+});
 
 // ROUTE EXPORT
 module.exports = router;
