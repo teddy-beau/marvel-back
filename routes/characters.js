@@ -52,7 +52,6 @@ router.post("/characters/save", isAuthenticated, async (req, res) => {
    try {
       // Make sure both infos are available
       console.log("id fields", req.fields.userId);
-      console.log("id body", req.body.userId);
       console.log("char", req.fields.character);
       if (req.fields.character && req.fields.userId) {
          // Find user
