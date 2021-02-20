@@ -40,12 +40,7 @@ router.post("/user/signup", async (req, res) => {
             await newUser.save();
             console.log(`New user created: ${newUser.email}`);
 
-            res.status(201).json({
-               _id: newUser._id,
-               email: newUser.email,
-               username: newUser.username,
-               token: newUser.token,
-            });
+            res.status(201).json(newUser);
          } else {
             res.status(400).json({
                message: "Email and password are required.",
@@ -74,11 +69,7 @@ router.post("/user/login", async (req, res) => {
          // Compare new hash with the one in the DB
          if (newHash === user.hash) {
             console.log(`User logged in: ${user.email}`);
-            res.status(200).json({
-               _id: user._id,
-               token: user.token,
-               username: user.username,
-            });
+            res.status(200).json(user);
          } else {
             res.status(400).json({
                message: "Incorrect email or password.",
