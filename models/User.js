@@ -16,5 +16,5 @@ const User = mongoose.model("User", {
    salt: String,
 });
 
-// Export model
+// MODEL EXPORT
 module.exports = User;

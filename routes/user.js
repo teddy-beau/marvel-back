@@ -16,19 +16,17 @@ const User = require("../models/User");
 // ROUTE POST: SIGN UP
 router.post("/user/signup", async (req, res) => {
    try {
-      // Checking user existence
+      // Check if user exists:
       const user = await User.findOne({ email: req.fields.email });
       console.log(user);
-
       if (!user) {
-         // Checking all fields are provided
+         // Check if all fields are provided:
          if (req.fields.username && req.fields.email && req.fields.password) {
-            // Password encryption
+            // Password encryption:
             const salt = uid2(64);
             const hash = SHA256(req.fields.password + salt).toString(encBase64);
             const token = uid2(64);
-
-            // User creation
+            // User creation:
             const newUser = new User({
                email: req.fields.email,
                username: req.fields.username,
@@ -36,10 +34,9 @@ router.post("/user/signup", async (req, res) => {
                hash: hash,
                token: token,
             });
-
+            // Save new user:
             await newUser.save();
             console.log(`New user created: ${newUser.email}`);
-
             res.status(201).json(newUser);
          } else {
             res.status(400).json({
@@ -59,14 +56,14 @@ router.post("/user/signup", async (req, res) => {
 // ROUTE POST : LOG IN
 router.post("/user/login", async (req, res) => {
    try {
-      // Find the user with email
+      // Find the user with email:
       const user = await User.findOne({ email: req.fields.email });
       if (user) {
-         // If user exists, create a new hash
+         // If the user exists, create a new hash:
          const newHash = SHA256(req.fields.password + user.salt).toString(
             encBase64
          );
-         // Compare new hash with the one in the DB
+         // Compare new hash with the one in the DB:
          if (newHash === user.hash) {
             console.log(`User logged in: ${user.email}`);
             res.status(200).json(user);
@@ -89,7 +86,7 @@ router.post("/user/login", async (req, res) => {
 router.get("/user/:userId", isAuthenticated, async (req, res) => {
    try {
       const userToFind = await User.findById(req.params.userId);
-      // console.log(userToFind);
+      console.log(`User found in DB`);
       res.status(200).json(userToFind);
    } catch (error) {
       res.status(400).json({ error: error.message });

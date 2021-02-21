@@ -24,7 +24,6 @@ router.get("/characters", async (req, res) => {
 
       let name = "";
       if (req.query.name) {
-         // name = new RegExp(req.query.name, "i"); // Not accepted by API
          name = req.query.name;
       }
 
@@ -38,12 +37,11 @@ router.get("/characters", async (req, res) => {
    }
 });
 
-// ADD CHARACTER TO LIST
+// ROUTE: ADD CHARACTER TO LIST
 router.post("/characters/save", isAuthenticated, async (req, res) => {
    try {
-      // Make sure both infos are available:
       if (req.fields.character && req.fields.userId) {
-         // Find user
+         // Find user:
          const user = await User.findById(req.fields.userId);
          // Check if the character is already saved:
          let isInList = false;
@@ -52,12 +50,12 @@ router.post("/characters/save", isAuthenticated, async (req, res) => {
                isInList = true;
             }
          });
-         // Add body to user list if no match:
+         // If there is no match add body to user list:
          if (!isInList) {
             user.fav_characters.push(req.fields.character);
             await user.save();
          }
-         // Return the boolean
+         console.log(`1 character added to user list`);
          res.status(200).json(isInList);
       } else {
          res.status(400).json({
@@ -69,20 +67,21 @@ router.post("/characters/save", isAuthenticated, async (req, res) => {
    }
 });
 
-// REMOVE CHARACTER FROM LIST
+// ROUTE: REMOVE CHARACTER FROM LIST
 router.post("/characters/unsave", isAuthenticated, async (req, res) => {
    try {
-      // Make sure both infos are available:
       if (req.fields.item && req.fields.userId) {
-         // Find user
+         // Find user:
          const user = await User.findById(req.fields.userId);
-         // Remove from user fav
+         // Remove item from user list:
          user.fav_characters.map((elem, index) => {
             if (elem._id === req.fields.item._id) {
                user.fav_characters.splice(index, 1);
             }
          });
+         // Save changes:
          await user.save();
+         console.log(`1 character removed from user list`);
          res.status(200).json({ message: "Remove from list" });
       } else {
          res.status(400).json({

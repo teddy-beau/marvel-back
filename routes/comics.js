@@ -24,14 +24,12 @@ router.get("/comics", async (req, res) => {
 
       let title = "";
       if (req.query.title) {
-         // name = new RegExp(req.query.title, "i"); // Not accepted by API
          title = req.query.title;
       }
 
       const response = await axios.get(
          `https://lereacteur-marvel-api.herokuapp.com/comics?apiKey=${process.env.MARVEL_API_KEY}&limit=${limit}&skip=${skip}&title=${title}`
       );
-      // console.log(response.data);
       res.status(200).json(response.data);
    } catch (error) {
       console.log(error);
@@ -41,24 +39,21 @@ router.get("/comics", async (req, res) => {
 // ROUTE: COMICS FOR 1 CHARACTER
 router.get("/comics/:characterId", async (req, res) => {
    try {
-      let characterId = req.params.characterId;
-
       const response = await axios.get(
-         `https://lereacteur-marvel-api.herokuapp.com/comics/${characterId}?apiKey=${process.env.MARVEL_API_KEY}`
+         `https://lereacteur-marvel-api.herokuapp.com/comics/${req.params.characterId}?apiKey=${process.env.MARVEL_API_KEY}`
       );
-      // console.log(response.data);
+      console.log(`Character details accessed`);
       res.status(200).json(response.data);
    } catch (error) {
       console.log(error);
    }
 });
 
-// ADD COMIC TO LIST
+// ROUTE: ADD COMIC TO LIST
 router.post("/comics/save", isAuthenticated, async (req, res) => {
    try {
-      // Make sure both infos are available:
       if (req.fields.comic && req.fields.userId) {
-         // Find user
+         // Find user:
          const user = await User.findById(req.fields.userId);
          // Check if the comic is already saved:
          let isInList = false;
@@ -67,12 +62,12 @@ router.post("/comics/save", isAuthenticated, async (req, res) => {
                isInList = true;
             }
          });
-         // Add body to user list if no match:
+         // If there's no match, add comic to user list:
          if (!isInList) {
             user.fav_comics.push(req.fields.comic);
             await user.save();
          }
-         // Return the boolean
+         console.log(`1 comic added to user list`);
          res.status(200).json(isInList);
       } else {
          res.status(400).json({
@@ -84,20 +79,21 @@ router.post("/comics/save", isAuthenticated, async (req, res) => {
    }
 });
 
-// REMOVE COMIC FROM LIST
+// ROUTE: REMOVE COMIC FROM LIST
 router.post("/comics/unsave", isAuthenticated, async (req, res) => {
    try {
-      // Make sure both infos are available:
       if (req.fields.item && req.fields.userId) {
-         // Find user
+         // Find user:
          const user = await User.findById(req.fields.userId);
-         // Remove from user fav
+         // Remove from user list:
          user.fav_comics.map((elem, index) => {
             if (elem._id === req.fields.item._id) {
                user.fav_comics.splice(index, 1);
             }
          });
+         // Save changes:
          await user.save();
+         console.log(`1 comic removed from user list`);
          res.status(200).json({ message: "Remove from list" });
       } else {
          res.status(400).json({
