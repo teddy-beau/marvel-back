@@ -86,9 +86,9 @@ router.post("/characters/unsave", isAuthenticated, async (req, res) => {
          // Find user
          const user = await User.findById(req.fields.userId);
          // Remove from user fav
-         user.fav_characters.map((elem) => {
+         user.fav_characters.map((elem, index) => {
             if (elem._id === req.fields.character._id) {
-               user.fav_characters.splice(elem, 1);
+               user.fav_characters.splice(index, 1);
             }
          });
          res.status(200).json({ message: "Remove from list" });
