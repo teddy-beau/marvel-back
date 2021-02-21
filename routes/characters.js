@@ -31,19 +31,8 @@ router.get("/characters", async (req, res) => {
       const response = await axios.get(
          `https://lereacteur-marvel-api.herokuapp.com/characters?apiKey=${process.env.MARVEL_API_KEY}&limit=${limit}&skip=${skip}&name=${name}`
       );
-      // Cleaning the API call results by removing charcaters without picture
-      const cleanResponse = { ...response };
-      cleanResponse.data.results.map((elem, index) => {
-         if (
-            !elem.thumbnail ||
-            elem.thumbnail.path ===
-               "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available"
-         ) {
-            cleanResponse.data.results.splice(index, 1);
-         }
-      });
 
-      res.status(200).json(cleanResponse.data);
+      res.status(200).json(response.data);
    } catch (error) {
       console.log(error);
    }
