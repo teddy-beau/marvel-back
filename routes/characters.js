@@ -92,7 +92,6 @@ router.post("/characters/unsave", isAuthenticated, async (req, res) => {
             }
          });
          await user.save();
-
          res.status(200).json({ message: "Remove from list" });
       } else {
          res.status(400).json({

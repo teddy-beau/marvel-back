@@ -54,29 +54,60 @@ router.get("/comics/:characterId", async (req, res) => {
 });
 
 // ADD COMIC TO LIST
-// router.post("/comics/save", isAuthenticated, async (req, res) => {
-//    try {
-//       // Make sure both infos are available
-//       if (req.query.comicId && req.query.userId) {
-//          // Find user
-//          const user = await User.findById(req.query.userId);
-//          // Get comic info:
-//          const response = await axios.get(
-//             `https://lereacteur-marvel-api.herokuapp.com/comics/${req.query.comicId}?apiKey=${process.env.MARVEL_API_KEY}`
-//          );
-//          // Add to user list:
-//          user.fav_comics.push(response.data);
-//          await user.save();
-//          console.log(user);
-//       } else {
-//          res.status(400).json({
-//             message: "Missing information.",
-//          });
-//       }
-//    } catch (error) {
-//       console.log(error);
-//    }
-// });
+router.post("/comics/save", isAuthenticated, async (req, res) => {
+   try {
+      // Make sure both infos are available:
+      if (req.fields.comic && req.fields.userId) {
+         // Find user
+         const user = await User.findById(req.fields.userId);
+         // Check if the comic is already saved:
+         let isInList = false;
+         user.fav_comics.map((elem) => {
+            if (elem._id === req.fields.comic._id) {
+               isInList = true;
+            }
+         });
+         // Add body to user list if no match:
+         if (!isInList) {
+            user.fav_comics.push(req.fields.comic);
+            await user.save();
+         }
+         // Return the boolean
+         res.status(200).json(isInList);
+      } else {
+         res.status(400).json({
+            message: "Missing information.",
+         });
+      }
+   } catch (error) {
+      console.log(error);
+   }
+});
+
+// REMOVE COMIC FROM LIST
+router.post("/comics/unsave", isAuthenticated, async (req, res) => {
+   try {
+      // Make sure both infos are available:
+      if (req.fields.comic && req.fields.userId) {
+         // Find user
+         const user = await User.findById(req.fields.userId);
+         // Remove from user fav
+         user.fav_comics.map((elem, index) => {
+            if (elem._id === req.fields.comic._id) {
+               user.fav_comics.splice(index, 1);
+            }
+         });
+         await user.save();
+         res.status(200).json({ message: "Remove from list" });
+      } else {
+         res.status(400).json({
+            message: "Missing information.",
+         });
+      }
+   } catch (error) {
+      console.log(error);
+   }
+});
 
 // ROUTE EXPORT
 module.exports = router;
