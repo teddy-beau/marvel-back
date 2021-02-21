@@ -89,6 +89,7 @@ router.post("/characters/unsave", isAuthenticated, async (req, res) => {
          user.fav_characters.map((elem, index) => {
             if (elem._id === req.fields.character._id) {
                user.fav_characters.splice(index, 1);
+               await user.save();
             }
          });
          res.status(200).json({ message: "Remove from list" });
