@@ -50,14 +50,24 @@ router.get("/characters", async (req, res) => {
 // ADD CHARACTER TO LIST
 router.post("/characters/save", isAuthenticated, async (req, res) => {
    try {
-      // Make sure both infos are available
+      // Make sure both infos are available:
       if (req.fields.character && req.fields.userId) {
          // Find user
          const user = await User.findById(req.fields.userId);
-         // Add body to user list:
-         user.fav_characters.push(req.fields.character);
-         await user.save();
-         console.log(user);
+         // Check if the character is already saved:
+         let isInList = false;
+         user.fav_characters.map((elem) => {
+            if (elem._id === req.fields.character._id) {
+               isInList = true;
+            }
+         });
+         // Add body to user list if no match:
+         if (!isInList) {
+            user.fav_characters.push(req.fields.character);
+            await user.save();
+         }
+         // Return the boolean
+         res.status(200).json(isInList);
       } else {
          res.status(400).json({
             message: "Missing information.",
