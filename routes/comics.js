@@ -88,12 +88,12 @@ router.post("/comics/save", isAuthenticated, async (req, res) => {
 router.post("/comics/unsave", isAuthenticated, async (req, res) => {
    try {
       // Make sure both infos are available:
-      if (req.fields.comic && req.fields.userId) {
+      if (req.fields.item && req.fields.userId) {
          // Find user
          const user = await User.findById(req.fields.userId);
          // Remove from user fav
          user.fav_comics.map((elem, index) => {
-            if (elem._id === req.fields.comic._id) {
+            if (elem._id === req.fields.item._id) {
                user.fav_comics.splice(index, 1);
             }
          });
