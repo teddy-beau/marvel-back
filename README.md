@@ -1,5 +1,7 @@
 # marvel-back
 
+Frontend repository: https://github.com/teddy-beau/marvel-front
+
 ## Dependencies
 
 -  Express,
