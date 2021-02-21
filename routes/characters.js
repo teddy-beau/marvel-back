@@ -81,25 +81,17 @@ router.post("/characters/save", isAuthenticated, async (req, res) => {
 // REMOVE CHARACTER FROM LIST
 router.post("/characters/unsave", isAuthenticated, async (req, res) => {
    try {
-      // Make sure both infos are available
-      if (req.query.character && req.query.userId) {
+      // Make sure both infos are available:
+      if (req.fields.character && req.fields.userId) {
          // Find user
-         const user = await User.findById(req.query.userId);
-         // Get object keys
-         const keys = Object.keys(user.fav_characters);
-         console.log("keys", keys);
-         for (let i = 0; i < keys.length; i++) {
-            console.log("_id[I]", user.fav_characters[i]._id);
-            if (user.fav_characters[i]._id === req.fields.character._id) {
-               user.fav_characters.splice(i, 1);
+         const user = await User.findById(req.fields.userId);
+         // Remove from user fav
+         user.fav_characters.map((elem) => {
+            if (elem._id === req.fields.character._id) {
+               user.fav_characters.splice(elem, 1);
             }
-         }
-         console.log("user", user);
-         // for each keys > key.charID
-         // if key.charID match body.charID > remove match (splice)
-
-         await user.save();
-         console.log(user);
+         });
+         res.status(200).json({ message: "Remove from list" });
       } else {
          res.status(400).json({
             message: "Missing information.",

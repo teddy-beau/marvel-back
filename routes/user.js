@@ -89,7 +89,7 @@ router.post("/user/login", async (req, res) => {
 router.get("/user/:userId", isAuthenticated, async (req, res) => {
    try {
       const userToFind = await User.findById(req.params.userId);
-      console.log(userToFind);
+      // console.log(userToFind);
       res.status(200).json(userToFind);
    } catch (error) {
       res.status(400).json({ error: error.message });
